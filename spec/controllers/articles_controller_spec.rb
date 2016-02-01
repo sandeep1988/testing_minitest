@@ -1,6 +1,8 @@
 require "rails_helper"
 
 describe ArticlesController do
+
+  ####index articles
   describe "GET #index" do
     it "populates an array of articles" do
       article = FactoryGirl.create(:article)
@@ -13,7 +15,9 @@ describe ArticlesController do
       get :index
       response.should render_template :index
     end
-  end
+    end
+
+  ###show articles
 
   describe "GET #show" do
     it "assigns the requested article to @article" do
@@ -29,6 +33,8 @@ describe ArticlesController do
         response.should render_template :show
       end
     end
+
+  ## create articles
 
   describe "POST create" do
     context "with valid attributes" do
@@ -47,34 +53,69 @@ describe ArticlesController do
     end
   end
 
-  context "with invalid attributes" do
-    it "does not save the new article" do
-      expect{
-        post :create, article: FactoryGirl.attributes_for(:invalid_article)
-      }.to_not change(Article,:count)
-    end
-
-    it "re-renders the new method" do
-      post :create, article: FactoryGirl.attributes_for(:invalid_article)
-      response.should render_template :new
-    end
-
-  end
+  ### delete articles
 
   describe 'DELETE destroy' do
     before :each do
-      @article = FactoryGirl(:article)
+      @article = FactoryGirl.create(:article)
     end
 
     it "deletes the article" do
       expect{
-        delete :destroy, id: @article
-      }.to change(Article,:count).by(-1)
+        delete :destroy, id: @article}.to change(Article,:count).by(-1)
     end
 
     it "redirects to articles#index" do
       delete :destroy, id: @article
       response.should redirect_to articles_url
+    end
+  end
+
+  # updates articles ##
+
+  describe 'PUT update' do
+    before :each do
+      @article = FactoryGirl.create(:article, title: "Title", text: "sadsads")
+    end
+
+    context "valid attributes" do
+      it "located the requested @article" do
+        put :update, id: @article, article: FactoryGirl.attributes_for(:article)
+        assigns(:article).should eq(@article)
+      end
+
+      it "changes @article's attributes" do
+        put :update, id: @article,
+            article: FactoryGirl.attributes_for(:article, title: "Title", text: "sadsads")
+        @article.reload
+        @article.title.should eq("Title")
+        @article.text.should eq("sadsads")
+      end
+
+      it "redirects to the updated article" do
+        put :update, id: @article, article: FactoryGirl.attributes_for(:article)
+        response.should redirect_to @article
+      end
+    end
+
+    context "invalid attributes" do
+      it "locates the requested @article" do
+        put :update, id: @article, article: FactoryGirl.attributes_for(:article)
+        assigns(:article).should eq(@article)
+      end
+
+      it "does not change @article's attributes" do
+        put :update, id: @article,
+            article: FactoryGirl.attributes_for(:article, title: "Title", text: nil)
+        @article.reload
+        @article.title.should eq("Title")
+        @article.text.should eq("sadsads")
+      end
+
+      it "re-renders the edit method" do
+        put :update, id: @article, article: FactoryGirl.attributes_for(:article)
+        response.should redirect_to @article
+      end
     end
   end
 

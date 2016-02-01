@@ -14,7 +14,7 @@ describe Article do
   end
 
   it "is valid with title,text" do
-    article = Article.new(:title =>"test",:text=> "test_text")
+    article = Article.new(:title=>"test",:text=> "test_text")
     expect(article).to be_valid
   end
 

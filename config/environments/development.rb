@@ -21,12 +21,12 @@ Rails.application.configure do
   config.quiet_assets = false
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
-
+  config.i18n.enforce_available_locales = false
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
-
+  config.active_support.deprecation = :raise
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
   config.assets.digest = true
